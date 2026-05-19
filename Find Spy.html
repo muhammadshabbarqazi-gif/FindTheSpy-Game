@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Find Spy – MSQ Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial;
+color:#fff;
+text-align:center;
+background:radial-gradient(circle at top,#0f2027,#000),
+linear-gradient(45deg,#000,#001);
+background-blend-mode:overlay;
+min-height:100vh;
+}
+
+.box{
+max-width:430px;
+margin:14px auto;
+padding:18px;
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(12px);
+border-radius:18px;
+border:1px solid rgba(255,255,255,0.12);
+}
+
+h1{font-size:30px;text-shadow:0 0 10px #00eaff;}
+
+input,select,button{
+width:100%;
+padding:14px;
+margin:8px 0;
+border:none;
+border-radius:14px;
+font-size:16px;
+}
+
+input,select{
+background:#111;
+color:#fff;
+border:1px solid rgba(255,255,255,0.15);
+}
+
+button{
+background:linear-gradient(45deg,#00eaff,#00aaff);
+color:#000;
+font-weight:bold;
+}
+
+/* CARD */
+.card{width:100%;height:260px;perspective:1000px;}
+.card-inner{width:100%;height:100%;transition:.6s;transform-style:preserve-3d;position:relative;}
+.card.flip .card-inner{transform:rotateY(180deg);}
+
+.card-front,.card-back{
+position:absolute;width:100%;height:100%;
+border-radius:20px;display:flex;
+align-items:center;justify-content:center;
+font-size:22px;font-weight:bold;
+backface-visibility:hidden;
+}
+
+.card-front{background:linear-gradient(135deg,#00eaff,#0066ff);color:#000;}
+.card-back{background:#111;color:#fff;transform:rotateY(180deg);}
+
+.timer{font-size:24px;color:#00eaff;}
+
+.discussionBox{
+display:flex;flex-direction:column;
+align-items:center;justify-content:center;height:250px;
+}
+
+.discussionTitle{
+font-size:28px;color:#00eaff;
+text-shadow:0 0 10px #00eaff;
+}
+
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="clickSnd" src="https://assets.mixkit.co/active_storage/sfx/2569/2569-preview.mp3"></audio>
+<audio id="revealSnd" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
+<audio id="alarmSnd" src="https://assets.mixkit.co/active_storage/sfx/746/746-preview.mp3"></audio>
+<audio id="spySnd" src="https://assets.mixkit.co/active_storage/sfx/209/209-preview.mp3"></audio>
+
+<!-- HOME -->
+<div id="home" class="box">
+<h1>🕵️ FIND SPY</h1>
+<p>MSQ PREMIUM EDITION</p>
+
+<button onclick="openOffline()">OFFLINE MODE</button>
+<button onclick="openOnline()">ONLINE MODE</button>
+</div>
+
+<!-- ONLINE MENU -->
+<div id="onlineMenu" class="box hidden">
+<h2>ONLINE MODE</h2>
+
+<button onclick="openCreate()">CREATE ROOM</button>
+<button onclick="openJoin()">JOIN ROOM</button>
+</div>
+
+<!-- CREATE ROOM -->
+<div id="createRoom" class="box hidden">
+<h2>CREATE ROOM</h2>
+
+<input placeholder="Room Name">
+<input placeholder="Password">
+
+<select>
+<option>Food</option>
+<option>Cars</option>
+<option>Objects</option>
+<option>Places</option>
+</select>
+
+<input type="number" placeholder="Players">
+<input type="number" placeholder="Timer">
+
+<button onclick="alert('Room Created (Demo)')">CREATE</button>
+</div>
+
+<!-- JOIN ROOM -->
+<div id="joinRoom" class="box hidden">
+<h2>JOIN ROOM</h2>
+
+<input placeholder="Enter Room ID">
+<button onclick="alert('Joined (Demo)')">JOIN</button>
+</div>
+
+<!-- SETUP -->
+<div id="setup" class="box hidden">
+<h2>GAME SETUP</h2>
+
+<input id="playersInp" type="number" value="5">
+<input id="spiesInp" type="number" value="1">
+
+<select id="categorySel">
+<option value="food">Food</option>
+<option value="cars">Cars</option>
+<option value="objects">Objects</option>
+<option value="places">Places</option>
+</select>
+
+<input id="timerInp" type="number" value="30">
+
+<button id="startBtn">START GAME</button>
+</div>
+
+<!-- CARD -->
+<div id="cardPage" class="box hidden">
+<h2 id="playerTitle"></h2>
+
+<div id="card" class="card">
+<div class="card-inner">
+<div class="card-front">TAP TO REVEAL</div>
+<div class="card-back" id="cardBack"></div>
+</div>
+</div>
+
+<button id="nextBtn" class="hidden">NEXT</button>
+</div>
+
+<!-- TIMER -->
+<div id="timerPage" class="box hidden">
+<div class="discussionBox">
+<div class="discussionTitle">DISCUSSION TIME</div>
+<div id="timeText" class="timer"></div>
+</div>
+</div>
+
+<!-- VOTING -->
+<div id="votePage" class="box hidden">
+<h2 id="voteTitle"></h2>
+<div id="voteBtns"></div>
+</div>
+
+<!-- RESULT -->
+<div id="resultPage" class="box hidden">
+<h2 id="resultText"></h2>
+<p id="extraInfo"></p>
+<button onclick="location.reload()">PLAY AGAIN</button>
+</div>
+
+<script>
+const $ = id=>document.getElementById(id);
+
+/* NAVIGATION */
+function openOffline(){
+$("home").classList.add("hidden");
+$("setup").classList.remove("hidden");
+}
+
+function openOnline(){
+$("home").classList.add("hidden");
+$("onlineMenu").classList.remove("hidden");
+}
+
+function openCreate(){
+$("onlineMenu").classList.add("hidden");
+$("createRoom").classList.remove("hidden");
+}
+
+function openJoin(){
+$("onlineMenu").classList.add("hidden");
+$("joinRoom").classList.remove("hidden");
+}
+
+/* ORIGINAL GAME JS SAME BELOW */
+
+const clickSnd=$("clickSnd");
+const revealSnd=$("revealSnd");
+const alarmSnd=$("alarmSnd");
+const spySnd=$("spySnd");
+
+const setup=$("setup"),cardPage=$("cardPage"),
+timerPage=$("timerPage"),votePage=$("votePage"),resultPage=$("resultPage");
+
+const playersInp=$("playersInp"),spiesInp=$("spiesInp"),
+categorySel=$("categorySel"),timerInp=$("timerInp");
+
+const card=$("card"),cardBack=$("cardBack"),playerTitle=$("playerTitle"),
+nextBtn=$("nextBtn");
+
+const voteTitle=$("voteTitle"),voteBtns=$("voteBtns"),
+timeText=$("timeText"),resultText=$("resultText"),extraInfo=$("extraInfo");
+
+function play(a){a.currentTime=0;a.play();}
+
+const words={
+food:["Pizza","Burger","Biryani","Pasta"],
+cars:["BMW","Honda","Toyota","Audi"],
+objects:["Chair","Phone","Bottle","Watch"],
+places:["School","Hospital","Market","Airport"]
+};
+
+let roles=[],alive=[],votes=[];
+let totalPlayers,spies,category,word,current=0,voter=0,timerSec,interval;
+
+/* START */
+$("startBtn").onclick=()=>{
+play(clickSnd);
+
+roles=[];alive=[];votes=[];current=0;voter=0;
+clearInterval(interval);
+
+totalPlayers=+playersInp.value;
+spies=+spiesInp.value;
+category=categorySel.value;
+timerSec=+timerInp.value;
+
+for(let i=0;i<totalPlayers;i++){roles.push("CITIZEN");alive.push(i);}
+
+let s=spies;
+while(s>0){
+let r=Math.floor(Math.random()*totalPlayers);
+if(roles[r]!=="SPY"){roles[r]="SPY";s--;}
+}
+
+word=words[category][Math.floor(Math.random()*words[category].length)];
+
+setup.classList.add("hidden");
+cardPage.classList.remove("hidden");
+
+showCard();
+};
+
+function showCard(){
+nextBtn.classList.add("hidden");
+playerTitle.innerText="PLAYER "+(current+1);
+cardBack.innerText="";
+card.classList.remove("flip");
+}
+
+card.onclick=()=>{
+play(revealSnd);
+
+cardBack.innerText = roles[current]==="SPY" ? "🕵️ YOU ARE SPY" : word;
+
+if(roles[current]==="SPY"){spySnd.play();}
+
+card.classList.add("flip");
+nextBtn.classList.remove("hidden");
+};
+
+nextBtn.onclick=()=>{
+play(clickSnd);
+current++;
+
+if(current>=totalPlayers){
+cardPage.classList.add("hidden");
+startTimer();
+}else{showCard();}
+};
+
+function startTimer(){
+timerPage.classList.remove("hidden");
+timeText.innerText=timerSec+"s";
+
+interval=setInterval(()=>{
+timerSec--;
+timeText.innerText=timerSec+"s";
+
+if(timerSec<=0){
+clearInterval(interval);
+alarmSnd.play();
+
+setTimeout(()=>{
+timerPage.classList.add("hidden");
+startVoting();
+},600);
+}
+},1000);
+}
+
+function startVoting(){
+votePage.classList.remove("hidden");
+votes=new Array(totalPlayers).fill(0);
+voter=0;
+nextVoter();
+}
+
+function nextVoter(){
+if(voter>=alive.length){
+votePage.classList.add("hidden");
+processVotes();
+return;
+}
+
+voteTitle.innerText="PLAYER "+(alive[voter]+1)+" VOTE";
+voteBtns.innerHTML="";
+
+alive.forEach(p=>{
+if(p!==alive[voter]){
+let b=document.createElement("button");
+b.innerText="Player "+(p+1);
+b.onclick=()=>{
+play(clickSnd);
+votes[p]++;
+voter++;
+nextVoter();
+};
+voteBtns.appendChild(b);
+}
+});
+}
+
+function processVotes(){
+let max=Math.max(...votes);
+let out=votes.indexOf(max);
+
+resultPage.classList.remove("hidden");
+
+if(roles[out]==="SPY"){
+resultText.innerText="🎉 CITIZENS WIN!";
+extraInfo.innerText="Spy was Player "+(out+1);
+}else{
+resultText.innerText="❌ PLAYER "+(out+1)+" OUT";
+extraInfo.innerText="Spy still alive";
+
+alive=alive.filter(p=>p!==out);
+
+setTimeout(()=>{
+resultPage.classList.add("hidden");
+current=0;
+cardPage.classList.remove("hidden");
+showCard();
+},2000);
+}
+}
+</script>
+
+</body>
+</html>
