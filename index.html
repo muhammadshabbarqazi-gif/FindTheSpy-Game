@@ -1,120 +1,129 @@
+# Find Spy v2 — Final HTML Structure
+
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<link rel="stylesheet" href="style.css">
 <meta charset="UTF-8">
-<title>Find Spy – MSQ Edition</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Spy v2</title>
 
-<style>
-*{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:Arial;
-color:#fff;
-text-align:center;
-background:radial-gradient(circle at top,#0f2027,#000),
-linear-gradient(45deg,#000,#001);
-background-blend-mode:overlay;
-min-height:100vh;
-}
-
-.box{
-max-width:430px;
-margin:14px auto;
-padding:18px;
-background:rgba(255,255,255,0.06);
-backdrop-filter:blur(12px);
-border-radius:18px;
-border:1px solid rgba(255,255,255,0.12);
-}
-
-h1{font-size:30px;text-shadow:0 0 10px #00eaff;}
-
-input,select,button{
-width:100%;
-padding:14px;
-margin:8px 0;
-border:none;
-border-radius:14px;
-font-size:16px;
-}
-
-input,select{
-background:#111;
-color:#fff;
-border:1px solid rgba(255,255,255,0.15);
-}
-
-button{
-background:linear-gradient(45deg,#00eaff,#00aaff);
-color:#000;
-font-weight:bold;
-}
-
-/* CARD */
-.card{width:100%;height:260px;perspective:1000px;}
-.card-inner{width:100%;height:100%;transition:.6s;transform-style:preserve-3d;position:relative;}
-.card.flip .card-inner{transform:rotateY(180deg);}
-
-.card-front,.card-back{
-position:absolute;width:100%;height:100%;
-border-radius:20px;display:flex;
-align-items:center;justify-content:center;
-font-size:22px;font-weight:bold;
-backface-visibility:hidden;
-}
-
-.card-front{background:linear-gradient(135deg,#00eaff,#0066ff);color:#000;}
-.card-back{background:#111;color:#fff;transform:rotateY(180deg);}
-
-.timer{font-size:24px;color:#00eaff;}
-
-.discussionBox{
-display:flex;flex-direction:column;
-align-items:center;justify-content:center;height:250px;
-}
-
-.discussionTitle{
-font-size:28px;color:#00eaff;
-text-shadow:0 0 10px #00eaff;
-}
-
-.hidden{display:none}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- AUDIO -->
-<audio id="clickSnd" src="https://assets.mixkit.co/active_storage/sfx/2569/2569-preview.mp3"></audio>
-<audio id="revealSnd" src="https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3"></audio>
-<audio id="alarmSnd" src="https://assets.mixkit.co/active_storage/sfx/746/746-preview.mp3"></audio>
-<audio id="spySnd" src="https://assets.mixkit.co/active_storage/sfx/209/209-preview.mp3"></audio>
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="page activePage">
 
-<!-- HOME -->
-<div id="home" class="box">
+<div class="glassBox loginBox">
 <h1>🕵️ FIND SPY</h1>
-<p>MSQ PREMIUM EDITION</p>
+<p>ONLINE SOCIAL EDITION</p>
 
-<button onclick="openOffline()">OFFLINE MODE</button>
-<button onclick="openOnline()">ONLINE MODE</button>
+<input type="text" placeholder="Username">
+<input type="password" placeholder="Password">
+
+<button id="loginBtn">LOGIN</button>
+<button id="guestBtn">CONTINUE AS GUEST</button>
+
+<label>
+<input type="checkbox" checked>
+Remember Me
+</label>
+
+</div>
 </div>
 
-<!-- ONLINE MENU -->
-<div id="onlineMenu" class="box hidden">
+<!-- TOPBAR -->
+<div id="topbar">
+<button id="menuBtn">☰</button>
+<h2>FIND SPY</h2>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar" class="hidden">
+
+<div class="sidebarLogo">
+🕵️ FIND SPY
+</div>
+
+<button>🏠 Home</button>
+<button>🎮 Start Game</button>
+<button>👥 Friends</button>
+<button>💬 Inbox</button>
+<button>📢 Announcements</button>
+<button>⚙️ Settings</button>
+<button>🚪 Logout</button>
+
+</div>
+
+<!-- HOME PAGE -->
+<div id="homePage" class="page hidden">
+
+<div class="glassBox">
+<h1>WELCOME AGENT</h1>
+<p>Create rooms, play online and catch the spies.</p>
+</div>
+
+<div class="homeButtons">
+<button id="offlineBtn">OFFLINE MODE</button>
+<button id="onlineBtn">ONLINE MODE</button>
+</div>
+
+</div>
+
+<!-- OFFLINE PAGE -->
+<div id="offlinePage" class="page hidden">
+
+<div class="glassBox">
+<h2>OFFLINE GAME SETUP</h2>
+
+<label>Players</label>
+<input type="number" id="playersInp" min="4" max="12" value="4">
+
+<label>Spies</label>
+<input type="number" id="spiesInp" min="1" max="4" value="1">
+
+<label>Category</label>
+<select id="categorySel">
+<option>Food</option>
+<option>Cars</option>
+<option>Objects</option>
+<option>Places</option>
+</select>
+
+<label>Discussion Time</label>
+<input type="number" id="timerInp" value="30">
+
+<button id="startOfflineGame">START GAME</button>
+<button class="backBtn">⬅ BACK</button>
+
+</div>
+</div>
+
+<!-- ONLINE PAGE -->
+<div id="onlinePage" class="page hidden">
+
+<div class="glassBox">
 <h2>ONLINE MODE</h2>
 
-<button onclick="openCreate()">CREATE ROOM</button>
-<button onclick="openJoin()">JOIN ROOM</button>
+<button id="createRoomBtn">CREATE ROOM</button>
+<button id="joinRoomBtn">JOIN ROOM</button>
+<button disabled>QUICK MATCH (SOON)</button>
+
+<button class="backBtn">⬅ BACK</button>
+</div>
+
 </div>
 
 <!-- CREATE ROOM -->
-<div id="createRoom" class="box hidden">
+<div id="createRoomPage" class="page hidden">
+
+<div class="glassBox">
 <h2>CREATE ROOM</h2>
 
-<input placeholder="Room Name">
-<input placeholder="Password">
+<input type="text" placeholder="Room Name">
+<input type="password" placeholder="Room Password">
 
 <select>
 <option>Food</option>
@@ -124,260 +133,175 @@ text-shadow:0 0 10px #00eaff;
 </select>
 
 <input type="number" placeholder="Players">
-<input type="number" placeholder="Timer">
+<input type="number" placeholder="Discussion Time">
 
-<button onclick="alert('Room Created (Demo)')">CREATE</button>
+<button>CREATE ROOM</button>
+<button>SHARE ROOM</button>
+<button class="backBtn">⬅ BACK</button>
+
+</div>
 </div>
 
 <!-- JOIN ROOM -->
-<div id="joinRoom" class="box hidden">
+<div id="joinRoomPage" class="page hidden">
+
+<div class="glassBox">
 <h2>JOIN ROOM</h2>
 
-<input placeholder="Enter Room ID">
-<button onclick="alert('Joined (Demo)')">JOIN</button>
-</div>
+<input type="text" placeholder="Enter Room ID">
+<button>JOIN ROOM</button>
+<button class="backBtn">⬅ BACK</button>
 
-<!-- SETUP -->
-<div id="setup" class="box hidden">
-<h2>GAME SETUP</h2>
-
-<input id="playersInp" type="number" value="5">
-<input id="spiesInp" type="number" value="1">
-
-<select id="categorySel">
-<option value="food">Food</option>
-<option value="cars">Cars</option>
-<option value="objects">Objects</option>
-<option value="places">Places</option>
-</select>
-
-<input id="timerInp" type="number" value="30">
-
-<button id="startBtn">START GAME</button>
-</div>
-
-<!-- CARD -->
-<div id="cardPage" class="box hidden">
-<h2 id="playerTitle"></h2>
-
-<div id="card" class="card">
-<div class="card-inner">
-<div class="card-front">TAP TO REVEAL</div>
-<div class="card-back" id="cardBack"></div>
 </div>
 </div>
 
-<button id="nextBtn" class="hidden">NEXT</button>
+<!-- FRIENDS PAGE -->
+<div id="friendsPage" class="page hidden">
+
+<div class="glassBox">
+<h2>FRIENDS</h2>
+
+<input type="text" placeholder="Search Friends">
+<button>ADD FRIEND</button>
+
+<div class="friendList">
+<p>No Friends Yet</p>
 </div>
 
-<!-- TIMER -->
-<div id="timerPage" class="box hidden">
-<div class="discussionBox">
-<div class="discussionTitle">DISCUSSION TIME</div>
-<div id="timeText" class="timer"></div>
+<button class="backBtn">⬅ BACK</button>
+
 </div>
 </div>
 
-<!-- VOTING -->
-<div id="votePage" class="box hidden">
-<h2 id="voteTitle"></h2>
-<div id="voteBtns"></div>
+<!-- INBOX PAGE -->
+<div id="inboxPage" class="page hidden">
+
+<div class="glassBox">
+<h2>INBOX</h2>
+
+<div class="chatPreview">
+<p>No Messages Yet</p>
 </div>
 
-<!-- RESULT -->
-<div id="resultPage" class="box hidden">
-<h2 id="resultText"></h2>
-<p id="extraInfo"></p>
-<button onclick="location.reload()">PLAY AGAIN</button>
+<button class="backBtn">⬅ BACK</button>
+
+</div>
 </div>
 
-<script>
-const $ = id=>document.getElementById(id);
+<!-- ANNOUNCEMENTS -->
+<div id="announcementPage" class="page hidden">
 
-/* NAVIGATION */
-function openOffline(){
-$("home").classList.add("hidden");
-$("setup").classList.remove("hidden");
-}
+<div class="glassBox">
+<h2>ANNOUNCEMENTS</h2>
 
-function openOnline(){
-$("home").classList.add("hidden");
-$("onlineMenu").classList.remove("hidden");
-}
+<div class="announcementCard">
+<h3>Welcome</h3>
+<p>Welcome to Find Spy v2.</p>
+</div>
 
-function openCreate(){
-$("onlineMenu").classList.add("hidden");
-$("createRoom").classList.remove("hidden");
-}
+<button class="backBtn">⬅ BACK</button>
 
-function openJoin(){
-$("onlineMenu").classList.add("hidden");
-$("joinRoom").classList.remove("hidden");
-}
+</div>
+</div>
 
-/* ORIGINAL GAME JS SAME BELOW */
+<!-- SETTINGS -->
+<div id="settingsPage" class="page hidden">
 
-const clickSnd=$("clickSnd");
-const revealSnd=$("revealSnd");
-const alarmSnd=$("alarmSnd");
-const spySnd=$("spySnd");
+<div class="glassBox">
+<h2>SETTINGS</h2>
 
-const setup=$("setup"),cardPage=$("cardPage"),
-timerPage=$("timerPage"),votePage=$("votePage"),resultPage=$("resultPage");
+<label>
+<input type="checkbox" checked>
+Sound
+</label>
 
-const playersInp=$("playersInp"),spiesInp=$("spiesInp"),
-categorySel=$("categorySel"),timerInp=$("timerInp");
+<label>
+<input type="checkbox" checked>
+Music
+</label>
 
-const card=$("card"),cardBack=$("cardBack"),playerTitle=$("playerTitle"),
-nextBtn=$("nextBtn");
+<label>
+<input type="checkbox" checked>
+Notifications
+</label>
 
-const voteTitle=$("voteTitle"),voteBtns=$("voteBtns"),
-timeText=$("timeText"),resultText=$("resultText"),extraInfo=$("extraInfo");
+<button class="backBtn">⬅ BACK</button>
 
-function play(a){a.currentTime=0;a.play();}
+</div>
+</div>
 
-const words={
-food:["Pizza","Burger","Biryani","Pasta"],
-cars:["BMW","Honda","Toyota","Audi"],
-objects:["Chair","Phone","Bottle","Watch"],
-places:["School","Hospital","Market","Airport"]
-};
+<!-- CARD PAGE -->
+<div id="cardPage" class="page hidden">
 
-let roles=[],alive=[],votes=[];
-let totalPlayers,spies,category,word,current=0,voter=0,timerSec,interval;
+<div class="glassBox">
+<h2 id="playerTitle">PLAYER 1</h2>
 
-/* START */
-$("startBtn").onclick=()=>{
-play(clickSnd);
+<div class="card">
+<div class="cardInner">
+<div class="cardFront">TAP TO REVEAL</div>
+<div class="cardBack">WORD</div>
+</div>
+</div>
 
-roles=[];alive=[];votes=[];current=0;voter=0;
-clearInterval(interval);
+<button id="nextBtn">NEXT</button>
 
-totalPlayers=+playersInp.value;
-spies=+spiesInp.value;
-category=categorySel.value;
-timerSec=+timerInp.value;
+</div>
+</div>
 
-for(let i=0;i<totalPlayers;i++){roles.push("CITIZEN");alive.push(i);}
+<!-- DISCUSSION PAGE -->
+<div id="discussionPage" class="page hidden">
 
-let s=spies;
-while(s>0){
-let r=Math.floor(Math.random()*totalPlayers);
-if(roles[r]!=="SPY"){roles[r]="SPY";s--;}
-}
+<div class="glassBox">
+<h1>DISCUSSION TIME</h1>
+<h2 id="discussionTimer">30s</h2>
+</div>
 
-word=words[category][Math.floor(Math.random()*words[category].length)];
+</div>
 
-setup.classList.add("hidden");
-cardPage.classList.remove("hidden");
+<!-- VOTING PAGE -->
+<div id="votingPage" class="page hidden">
 
-showCard();
-};
+<div class="glassBox">
+<h2>VOTING</h2>
 
-function showCard(){
-nextBtn.classList.add("hidden");
-playerTitle.innerText="PLAYER "+(current+1);
-cardBack.innerText="";
-card.classList.remove("flip");
-}
+<div id="voteButtons"></div>
 
-card.onclick=()=>{
-play(revealSnd);
+</div>
 
-cardBack.innerText = roles[current]==="SPY" ? "🕵️ YOU ARE SPY" : word;
+</div>
 
-if(roles[current]==="SPY"){spySnd.play();}
+<!-- RESULT PAGE -->
+<div id="resultPage" class="page hidden">
 
-card.classList.add("flip");
-nextBtn.classList.remove("hidden");
-};
+<div class="glassBox">
+<h1 id="resultTitle">RESULT</h1>
+<p id="resultText">Game Result Here</p>
 
-nextBtn.onclick=()=>{
-play(clickSnd);
-current++;
+<button id="restartBtn">PLAY AGAIN</button>
+<button id="mainMenuBtn">MAIN MENU</button>
 
-if(current>=totalPlayers){
-cardPage.classList.add("hidden");
-startTimer();
-}else{showCard();}
-};
+</div>
 
-function startTimer(){
-timerPage.classList.remove("hidden");
-timeText.innerText=timerSec+"s";
+</div>
 
-interval=setInterval(()=>{
-timerSec--;
-timeText.innerText=timerSec+"s";
-
-if(timerSec<=0){
-clearInterval(interval);
-alarmSnd.play();
-
-setTimeout(()=>{
-timerPage.classList.add("hidden");
-startVoting();
-},600);
-}
-},1000);
-}
-
-function startVoting(){
-votePage.classList.remove("hidden");
-votes=new Array(totalPlayers).fill(0);
-voter=0;
-nextVoter();
-}
-
-function nextVoter(){
-if(voter>=alive.length){
-votePage.classList.add("hidden");
-processVotes();
-return;
-}
-
-voteTitle.innerText="PLAYER "+(alive[voter]+1)+" VOTE";
-voteBtns.innerHTML="";
-
-alive.forEach(p=>{
-if(p!==alive[voter]){
-let b=document.createElement("button");
-b.innerText="Player "+(p+1);
-b.onclick=()=>{
-play(clickSnd);
-votes[p]++;
-voter++;
-nextVoter();
-};
-voteBtns.appendChild(b);
-}
-});
-}
-
-function processVotes(){
-let max=Math.max(...votes);
-let out=votes.indexOf(max);
-
-resultPage.classList.remove("hidden");
-
-if(roles[out]==="SPY"){
-resultText.innerText="🎉 CITIZENS WIN!";
-extraInfo.innerText="Spy was Player "+(out+1);
-}else{
-resultText.innerText="❌ PLAYER "+(out+1)+" OUT";
-extraInfo.innerText="Spy still alive";
-
-alive=alive.filter(p=>p!==out);
-
-setTimeout(()=>{
-resultPage.classList.add("hidden");
-current=0;
-cardPage.classList.remove("hidden");
-showCard();
-},2000);
-}
-}
-</script>
+<script src="firebase.js"></script>
+<script src="auth.js"></script>
+<script src="online.js"></script>
+<script src="offline.js"></script>
+<script src="chat.js"></script>
+<script src="friends.js"></script>
+<script src="settings.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
+```
+
+## NEXT STEP
+
+Ab iske baad:
+
+1. CSS futuristic neon UI banayega
+2. JavaScript navigation + game logic add karega
+3. Firebase online systems connect honge
+<script src="script.js"></script>
